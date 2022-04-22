@@ -1,0 +1,63 @@
+name: train_pose
+
+##########network############
+#network: pose
+models:
+  encoder:
+    type: vgg16_bn_2233
+  decoder:
+    type: PoseDecoder
+
+##########loss##############
+#loss: [cls_corr]
+loss: network.loss
+val_metric: pose_errs
+key_metric_name: pose_auc_5
+
+##########dataset############
+batch_size: 1 # 2,20
+train_dataset_type: pose_reg_dataset #type: datasets.pairwise_dataloader
+height: 256
+train_dataset_cfg:
+  database_set_names: scannet_pose
+  database_pair_name: loftr_train
+  img_type: rgb
+val_set_list:
+  -
+    name: dummy_val
+    type: pose_reg_dataset
+    cfg:
+      database_set_names: scannet_pose
+      database_pair_name: loftr_val
+      img_type: rgb
+
+##########optimizer##########
+optimizer_type: adam
+#lr_type: exp_decay
+#lr_cfg:
+#  lr_init: 1.0e-4
+#  decay_step: 100000
+#  decay_rate: 0.5
+lr: 1e-4  #  use default learning rate
+total_step: 300000
+train_log_step: 50
+val_interval: 10000
+save_interval: 1000
+
+##########trainer##########
+trainer:
+  type: trainers.decoder
+  epochs: 200
+  seed: 100
+  pairwise_type: 'correlation_volume'
+  reg: Ture
+  opt:
+    type: 'adam'
+    lr: 1e-4  #  use default learning rate
+    beta1: 0.9
+    beta2: 0.999
+    momentum: 0.9  # for SGD
+    weight_decay: 0.
+    scheduler: 'linear'
+    step_epoch: 10
+

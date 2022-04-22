@@ -1,0 +1,42 @@
+name: example_training
+
+##########network############
+network: example
+match_threshold: 0.0
+kps_max: 512
+
+##########loss##############
+loss: [cls_corr]
+val_metric: [pose_errs, vis_corr]
+key_metric_name: pose_auc_5
+output_interval: 25
+match_pixel_thresh: 5
+unmatch_pixel_thresh: 15
+
+##########dataset############
+batch_size: 2
+train_dataset_type: example
+train_dataset_cfg:
+  database_set_names: scannet_example
+  database_pair_name: loftr_train
+  img_type: gray
+val_set_list:
+  -
+    name: dummy_val
+    type: example
+    cfg:
+      database_set_names: scannet_example
+      database_pair_name: loftr_val
+      img_type: gray
+
+##########optimizer##########
+optimizer_type: adam
+lr_type: exp_decay
+lr_cfg:
+  lr_init: 1.0e-4
+  decay_step: 100000
+  decay_rate: 0.5
+total_step: 300000
+train_log_step: 50
+val_interval: 10000
+save_interval: 500

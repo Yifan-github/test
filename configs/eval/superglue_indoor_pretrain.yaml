@@ -1,0 +1,4 @@
+name: superglue_indoor_pretrain
+
+corr_estimator: configs/corr_estimator/superglue_indoor.yaml
+geom_estimator: configs/geom_estimator/ransac_default.yaml
